@@ -82,6 +82,7 @@ questions.forEach((q, index) => {
             } else {
                 correctAnswers++;
                 button.disabled = true;
+
                 if (correctAnswers === questions.length) {
                     document.getElementById("result").textContent = `Well done, you are umnichka! You made ${mistakes} mistakes.`;
                     setTimeout(() => {
