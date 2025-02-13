@@ -1,97 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz for Julian</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #ffe6e6;
-            color: #333;
             padding: 20px;
         }
-        .quiz-container {
-            max-width: 600px;
+        .container {
+            max-width: 500px;
             margin: auto;
             background: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #ff6699;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
+        h1 {
+            color: #ff4d4d;
         }
-        button:hover {
-            background-color: #ff3366;
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #ffcccc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options button:hover {
+            background-color: #ff9999;
+        }
+        .next-btn {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+        .next-btn:hover {
+            background-color: #cc0000;
+        }
+        .message {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="quiz-container">
+    <div class="container">
         <h1>Quiz for Julian</h1>
-        <div id="quiz"></div>
-        <button onclick="nextQuestion()">Next</button>
-        <p id="result" style="display: none;"></p>
+        <p><strong>Good luck, Julian! Let's see how well you know us!</strong></p>
+        <div id="quiz">
+            <p class="question"></p>
+            <div class="options"></div>
+            <p class="message"></p>
+            <button class="next-btn" onclick="nextQuestion()">Next</button>
+        </div>
     </div>
-
     <script>
-        const questions = [
-            { q: "Where will we live?", options: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: "Barcelona" },
-            { q: "What should we name our future pet?", options: ["Remy", "Luna", "Julian"], correct: "Julian" },
-            { q: "Who will say 'I love you' first today?", options: ["I", "You"], correct: "I" },
-            { q: "What's our dream vacation?", options: ["Malta", "France", "Albania"], correct: "Malta" },
-            { q: "What would be our couple superpower?", options: ["Solving all arguments", "Being invisible", "Flying"], correct: "Solving all arguments" },
-            { q: "If we had a time machine, where would we go first?", options: ["Future", "Past"], correct: "Future" },
-            { q: "Who is more likely to get lost in a mall?", options: ["I", "You"], correct: "You" },
-            { q: "If we had a magic lamp, what would our first wish be?", options: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: "We both become millionaires" },
-            { q: "If we had a secret hideout, where would it be?", options: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: "Under a palm tree" },
-            { q: "If we had a pet, what would it be?", options: ["Dragon", "Raccoon", "Fox"], correct: "Dragon" },
-            { q: "Which animated duo are we most like?", options: ["Mike & Sulley", "Shrek & Fiona", "Nick & Judy (Zootopia)"], correct: "Nick & Judy (Zootopia)" }
+        const quizData = [
+            {question: "Where will we live?", options: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: 1},
+            {question: "What should we name our future pet?", options: ["Remy", "Luna", "Julian"], correct: 2},
+            {question: "Who will say 'I love you' first today?", options: ["I", "You"], correct: 0},
+            {question: "What’s our dream vacation?", options: ["Malta", "France", "Albania"], correct: 0},
+            {question: "What would be our couple superpower?", options: ["Solving all arguments", "Being invisible", "Flying"], correct: 0},
+            {question: "If we had a time machine, where would we go first?", options: ["Future", "Past"], correct: 0},
+            {question: "Who is more likely to get lost in a mall?", options: ["I", "You"], correct: 1},
+            {question: "If we had a magic lamp, what would our first wish be?", options: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: 0},
+            {question: "If we had a secret hideout, where would it be?", options: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: 0},
+            {question: "If we had a pet, which would we choose?", options: ["Dragon", "Raccoon", "Fox"], correct: 0},
+            {question: "Which animated duo best represents us?", options: ["Mike & Sulley", "Shrek & Fiona", "Nick & Judy"], correct: 2}
         ];
 
         let currentQuestion = 0;
         let mistakes = 0;
 
-        function showQuestion() {
-            const quizDiv = document.getElementById("quiz");
-            quizDiv.innerHTML = "";
-            const question = questions[currentQuestion];
-            const questionTitle = document.createElement("h2");
-            questionTitle.innerText = question.q;
-            quizDiv.appendChild(questionTitle);
-            question.options.forEach(option => {
+        function loadQuestion() {
+            const questionElement = document.querySelector(".question");
+            const optionsElement = document.querySelector(".options");
+            const messageElement = document.querySelector(".message");
+            const nextButton = document.querySelector(".next-btn");
+
+            messageElement.textContent = "";
+            nextButton.style.display = "none";
+            optionsElement.innerHTML = "";
+            
+            questionElement.textContent = quizData[currentQuestion].question;
+            quizData[currentQuestion].options.forEach((option, index) => {
                 const button = document.createElement("button");
-                button.innerText = option;
-                button.onclick = function() {
-                    if (option !== question.correct) mistakes++;
-                    nextQuestion();
-                };
-                quizDiv.appendChild(button);
+                button.textContent = option;
+                button.onclick = () => checkAnswer(index);
+                optionsElement.appendChild(button);
             });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const correctIndex = quizData[currentQuestion].correct;
+            const messageElement = document.querySelector(".message");
+            
+            if (selectedIndex === correctIndex) {
+                document.querySelector(".next-btn").style.display = "block";
+            } else {
+                mistakes++;
+                messageElement.textContent = "Wrong answer! Try again.";
+            }
         }
 
         function nextQuestion() {
             currentQuestion++;
-            if (currentQuestion < questions.length) {
-                showQuestion();
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
             } else {
-                document.getElementById("quiz").style.display = "none";
-                document.querySelector("button").style.display = "none";
-                document.getElementById("result").style.display = "block";
-                document.getElementById("result").innerText = `Well done! You're umnichka! You made only ${mistakes} mistakes.`;
-                setTimeout(() => { window.location.href = "surprise.html"; }, 3000);
+                document.querySelector("#quiz").innerHTML = `<h2>Well done, you are umnichka!</h2><p>You made only ${mistakes} mistakes.</p><br><a href='surprise.html'>Go to your surprise!</a>`;
             }
         }
 
-        showQuestion();
+        loadQuestion();
     </script>
 </body>
 </html>
+
