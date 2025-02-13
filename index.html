@@ -8,127 +8,111 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f8e6e6;
+            background-color: #f9f0f0;
         }
         #quiz-container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .question {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .option {
-            display: block;
-            margin: 5px auto;
-            padding: 10px;
-            background-color: #f9d5e5;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .option:hover {
-            background-color: #f7b2c4;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 20px;
-        }
-        #valentine-container {
             display: none;
-            text-align: center;
-            margin-top: 50px;
         }
-        #valentine-container img {
-            max-width: 100%;
-            height: auto;
+        #result-container {
+            display: none;
         }
-        #yes, #no {
-            display: inline-block;
+        #final-screen {
+            display: none;
+        }
+        button {
             padding: 10px 20px;
-            font-size: 18px;
             margin: 10px;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            background-color: #ffb6c1;
+            font-size: 18px;
+            background-color: #d3d3d3;
+            color: black;
+            border-radius: 5px;
+            transition: all 0.3s;
         }
-        #no {
+        #yes-button, #no-button {
+            position: relative;
+            width: 120px;
+        }
+        #no-button {
             position: absolute;
         }
     </style>
 </head>
 <body>
     <div id="quiz-container">
-        <div id="question" class="question"></div>
+        <h1>Valentine's Quiz</h1>
+        <p id="question"></p>
         <div id="options"></div>
+        <button onclick="nextQuestion()">Next</button>
     </div>
-    <div id="result"></div>
-    <div id="valentine-container">
-        <h2>Will you be my Valentine?</h2>
+    <div id="result-container">
+        <h1>Well done, you are amazing!</h1>
+        <p>You made <span id="mistakes"></span> mistakes.</p>
+        <button onclick="showFinalScreen()">Continue</button>
+    </div>
+    <div id="final-screen">
+        <h1>Will you be my Valentine?</h1>
         <img src="cat.gif" alt="Cute cat">
-        <div>
-            <button id="yes">Yes</button>
-            <button id="no">No</button>
-        </div>
+        <br>
+        <button id="yes-button" onclick="alert('Yay!')">Yes</button>
+        <button id="no-button" onmouseover="moveButton()">No</button>
     </div>
     <script>
         const questions = [
-            { q: "Where will we live?", options: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: 1 },
-            { q: "What should we name our future pet?", options: ["Remy", "Luna", "Julian"], correct: 2 },
-            { q: "Who will say 'I love you' first today?", options: ["I", "You"], correct: 0 },
-            { q: "What's our dream vacation?", options: ["Malta", "France", "Albania"], correct: 0 },
-            { q: "What would be our couple superpower?", options: ["Solving all arguments", "Being invisible", "Flying"], correct: 0 },
-            { q: "If we had a time machine, where would we go first?", options: ["Future", "Past"], correct: 0 },
-            { q: "Who is more likely to get lost in a mall?", options: ["I", "You"], correct: 1 },
-            { q: "If we had a magic lamp, what would our first wish be?", options: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: 0 },
-            { q: "If we had a secret hideout, where would it be?", options: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: 0 },
-            { q: "What pet would we have?", options: ["Raccoon", "Small dragon", "Parrot"], correct: 1 }
+            { q: "What should we name our pet?", options: ["Raccoon", "Little Dragon", "Parrot"], answer: "Little Dragon" },
+            { q: "What’s our dream vacation?", options: ["Malta", "France", "Albania"], answer: "Malta" }
         ];
         let currentQuestion = 0;
         let mistakes = 0;
+
+        function startQuiz() {
+            document.getElementById("quiz-container").style.display = "block";
+            showQuestion();
+        }
         function showQuestion() {
-            if (currentQuestion >= questions.length) {
-                document.getElementById("quiz-container").style.display = "none";
-                document.getElementById("result").innerHTML = `Well done, you are amazing! You made ${mistakes} mistakes.`;
-                setTimeout(() => {
-                    document.getElementById("result").style.display = "none";
-                    document.getElementById("valentine-container").style.display = "block";
-                }, 2000);
-                return;
-            }
-            const q = questions[currentQuestion];
-            document.getElementById("question").innerText = q.q;
-            const optionsDiv = document.getElementById("options");
+            let q = questions[currentQuestion];
+            document.getElementById("question").textContent = q.q;
+            let optionsDiv = document.getElementById("options");
             optionsDiv.innerHTML = "";
-            q.options.forEach((opt, index) => {
-                const btn = document.createElement("button");
-                btn.innerText = opt;
-                btn.className = "option";
-                btn.onclick = () => {
-                    if (index !== q.correct) mistakes++;
-                    currentQuestion++;
-                    showQuestion();
-                };
+            q.options.forEach(option => {
+                let btn = document.createElement("button");
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(option, q.answer);
                 optionsDiv.appendChild(btn);
             });
         }
-        showQuestion();
-        const noButton = document.getElementById("no");
-        noButton.onmouseover = function() {
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 100);
-            noButton.style.left = `${x}px`;
-            noButton.style.top = `${y}px`;
-        };
-        document.getElementById("yes").onclick = function() {
-            alert("Yay! Happy Valentine's Day!");
-        };
+        function checkAnswer(selected, correct) {
+            if (selected !== correct) {
+                mistakes++;
+                return;
+            }
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+        function showResults() {
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("result-container").style.display = "block";
+            document.getElementById("mistakes").textContent = mistakes;
+        }
+        function showFinalScreen() {
+            document.getElementById("result-container").style.display = "none";
+            document.getElementById("final-screen").style.display = "block";
+        }
+        function moveButton() {
+            let button = document.getElementById("no-button");
+            let x = Math.random() * window.innerWidth - 100;
+            let y = Math.random() * window.innerHeight - 50;
+            x = Math.max(10, Math.min(x, window.innerWidth - 100));
+            y = Math.max(10, Math.min(y, window.innerHeight - 50));
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+        }
+        startQuiz();
     </script>
 </body>
 </html>
