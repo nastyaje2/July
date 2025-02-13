@@ -57,6 +57,7 @@ const questions = [
 ];
 
 let mistakes = 0;
+let correctAnswers = 0;
 
 const quizDiv = document.getElementById("quiz");
 
@@ -79,11 +80,19 @@ questions.forEach((q, index) => {
                 alert("Wrong answer, try again!");
                 mistakes++;
             } else {
-                button.style.backgroundColor = "green";
+                correctAnswers++;
+                button.disabled = true;
+                if (correctAnswers === questions.length) {
+                    document.getElementById("result").textContent = `Well done, you are umnichka! You made ${mistakes} mistakes.`;
+                    setTimeout(() => {
+                        window.location.href = "valentine.html";
+                    }, 2000);
+                }
             }
         };
         optionsDiv.appendChild(button);
     });
 
     div.appendChild(optionsDiv);
-    quizDiv.appendChild
+    quizDiv.appendChild(div);
+});
