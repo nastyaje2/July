@@ -29,18 +29,18 @@
             margin: 5px 0;
             border: none;
             border-radius: 5px;
-            background-color: #ff69b4;
+            background-color: #ffb6c1;
             color: white;
             font-size: 16px;
             cursor: pointer;
         }
         .answers button:hover {
-            background-color: #ff1493;
+            background-color: #ff99aa;
         }
         #nextBtn {
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #ff69b4;
+            background-color: #ffb6c1;
             color: white;
             border: none;
             border-radius: 5px;
@@ -48,7 +48,7 @@
             cursor: pointer;
         }
         #nextBtn:hover {
-            background-color: #ff1493;
+            background-color: #ff99aa;
         }
         .hidden {
             display: none;
@@ -61,6 +61,8 @@
         .valentine-container img {
             width: 300px;
             height: auto;
+            display: block;
+            margin: 0 auto;
         }
         .valentine-buttons {
             margin-top: 20px;
@@ -74,11 +76,11 @@
             margin: 10px;
         }
         #yesBtn {
-            background-color: #ff69b4;
+            background-color: #ffb6c1;
             color: white;
         }
         #noBtn {
-            background-color: #ff1493;
+            background-color: #ff99aa;
             color: white;
             position: absolute;
         }
@@ -99,7 +101,7 @@
     </div>
     <div class="valentine-container hidden" id="valentineContainer">
         <h2>Will you be my Valentine?</h2>
-        <img src="cat.gif" alt="Cute Cat">
+        <img id="valentineGif" src="cat.gif" alt="Cute Cat">
         <div class="valentine-buttons">
             <button id="yesBtn">Yes</button>
             <button id="noBtn">No</button>
@@ -149,6 +151,7 @@
         function showValentine() {
             document.getElementById("resultContainer").classList.add("hidden");
             document.getElementById("valentineContainer").classList.remove("hidden");
+            document.getElementById("valentineGif").src = "cat.gif";
         }
         document.getElementById("noBtn").onmouseover = function() {
             this.style.left = Math.random() * window.innerWidth + "px";
@@ -158,6 +161,7 @@
     </script>
 </body>
 </html>
+
 
 
 
