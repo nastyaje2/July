@@ -3,133 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine Quiz</title>
-    <style>
-        body {
-            background-color: pink;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-        .quiz-container {
-            background-color: white;
-            padding: 20px;
-            margin: 50px auto;
-            width: 60%;
-            border-radius: 10px;
-        }
-        .question {
-            font-size: 18px;
-        }
-        .answers button {
-            background-color: lightgray;
-            border: none;
-            padding: 10px;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .answers button:hover {
-            background-color: darkgray;
-        }
-        .hidden {
-            display: none;
-        }
-        .gif-container {
-            position: relative;
-        }
-        #no-button {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            transition: all 0.3s;
-        }
-    </style>
+    <title>Our Quiz</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="quiz-container" id="quiz">
-        <h2 id="question">Question appears here</h2>
-        <div class="answers" id="answers"></div>
-        <p id="error-message" class="hidden" style="color: red;">Wrong answer, try again!</p>
+    <div class="quiz-container">
+        <h1>Our Quiz</h1>
+        <div id="quiz"></div>
+        <p id="result"></p>
+        <button id="submit" onclick="checkAnswers()">Submit</button>
     </div>
-    
-    <div id="result" class="hidden">
-        <h2>Well done, you are умничка!</h2>
-        <p>You made <span id="mistake-count">0</span> mistakes.</p>
-        <button onclick="showGif()">Continue</button>
-    </div>
-    
-    <div id="gif-page" class="hidden">
-        <h2>Will you be my Valentine?</h2>
-        <div class="gif-container">
-            <img src="cat.gif" alt="Cute cat gif">
-            <button id="yes-button">Yes</button>
-            <button id="no-button" onmouseover="moveNoButton()">No</button>
-        </div>
-    </div>
-    
-    <script>
-        const questions = [
-            { q: "Where will we live?", a: ["Barcelona", "Toronto", "Africa", "Greenland"] },
-            { q: "What should we name our future pet?", a: ["Remy", "Luna", "Julian"] },
-            { q: "Who will say 'I love you' first today?", a: ["I", "You"] },
-            { q: "What’s our dream vacation?", a: ["Malta", "France", "Albania"] },
-            { q: "What would be our couple superpower?", a: ["Solving all arguments", "Being invisible", "Flying"] },
-            { q: "If we had a time machine, where would we go first?", a: ["Future", "Past"] },
-            { q: "Who is more likely to get lost in a mall?", a: ["I", "You"] },
-            { q: "If we had a magic lamp, what would our first wish be?", a: ["We both become millionaires", "We teleport to each other", "Endless free food"] },
-            { q: "If we had a secret hideout, where would it be?", a: ["Under a palm tree", "On a tree", "Inside a secret cave"] }
-        ];
-        
-        let currentQuestion = 0;
-        let mistakes = 0;
-        const questionElement = document.getElementById("question");
-        const answersElement = document.getElementById("answers");
-        const errorMessage = document.getElementById("error-message");
-        
-        function loadQuestion() {
-            if (currentQuestion >= questions.length) {
-                document.getElementById("quiz").classList.add("hidden");
-                document.getElementById("result").classList.remove("hidden");
-                document.getElementById("mistake-count").textContent = mistakes;
-                return;
-            }
-            
-            questionElement.textContent = questions[currentQuestion].q;
-            answersElement.innerHTML = "";
-            
-            questions[currentQuestion].a.forEach(answer => {
-                const button = document.createElement("button");
-                button.textContent = answer;
-                button.onclick = () => checkAnswer(answer);
-                answersElement.appendChild(button);
-            });
-        }
-        
-        function checkAnswer(answer) {
-            if (answer === questions[currentQuestion].a[0]) {
-                currentQuestion++;
-                errorMessage.classList.add("hidden");
-                loadQuestion();
-            } else {
-                mistakes++;
-                errorMessage.classList.remove("hidden");
-            }
-        }
-        
-        function showGif() {
-            document.getElementById("result").classList.add("hidden");
-            document.getElementById("gif-page").classList.remove("hidden");
-        }
-        
-        function moveNoButton() {
-            const button = document.getElementById("no-button");
-            const randomX = Math.random() * (window.innerWidth - 100);
-            const randomY = Math.random() * (window.innerHeight - 50);
-            button.style.left = `${randomX}px`;
-            button.style.top = `${randomY}px`;
-        }
-        
-        loadQuestion();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
