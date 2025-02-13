@@ -61,7 +61,6 @@ let correctAnswers = 0;
 
 const quizDiv = document.getElementById("quiz");
 const resultDiv = document.getElementById("result");
-const valentineDiv = document.getElementById("valentine");
 
 questions.forEach((q, index) => {
     const div = document.createElement("div");
@@ -101,21 +100,57 @@ function showValentineQuestion() {
     quizDiv.style.display = "none"; 
     resultDiv.innerHTML = `Well done! You're umnichka! You made ${mistakes} mistakes.`;
 
-    valentineDiv.style.display = "block"; 
+    // Создаём контейнер для гифки
+    const gifContainer = document.createElement("div");
+    gifContainer.style.textAlign = "center";
+    gifContainer.style.marginTop = "20px";
 
-    valentineDiv.innerHTML = `
-        <img src="cat.gif" alt="Cat GIF">
-        <h1>Will you be my Valentine?</h1>
-        <div class="buttons">
-            <button onclick="alert('Super! Yay! Happy Valentine\'s Day! ❤️')">Yes</button>
-            <button id="no">No</button>
-        </div>
-    `;
+    // Проверяем, есть ли гифка
+    fetch("cat.gif")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("GIF not found!");
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(blob);
+            img.alt = "Cat GIF";
+            gifContainer.appendChild(img);
 
-    const noButton = document.getElementById("no");
-    noButton.onmouseover = function() {
-        this.style.position = "absolute";
-        this.style.left = Math.random() * (window.innerWidth - 100) + "px";
-        this.style.top = Math.random() * (window.innerHeight - 50) + "px";
-    };
+            // Добавляем вопрос
+            const question = document.createElement("h1");
+            question.textContent = "Will you be my Valentine?";
+            gifContainer.appendChild(question);
+
+            // Создаём кнопки
+            const buttonsDiv = document.createElement("div");
+            buttonsDiv.classList.add("buttons");
+
+            const yesButton = document.createElement("button");
+            yesButton.textContent = "Yes";
+            yesButton.onclick = () => alert("Super! Yay! Happy Valentine's Day! ❤️");
+
+            const noButton = document.createElement("button");
+            noButton.textContent = "No";
+            noButton.id = "no";
+
+            buttonsDiv.appendChild(yesButton);
+            buttonsDiv.appendChild(noButton);
+            gifContainer.appendChild(buttonsDiv);
+
+            resultDiv.appendChild(gifContainer);
+
+            // Двигаем кнопку "No"
+            noButton.onmouseover = function() {
+                this.style.position = "absolute";
+                this.style.left = Math.random() * (window.innerWidth - 100) + "px";
+                this.style.top = Math.random() * (window.innerHeight - 50) + "px";
+            };
+        })
+        .catch(error => {
+            console.error("Error loading GIF:", error);
+            resultDiv.innerHTML += "<p>Error: GIF not found.</p>";
+        });
 }
