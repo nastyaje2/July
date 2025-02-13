@@ -85,7 +85,7 @@ questions.forEach((q, index) => {
                 button.disabled = true;
 
                 if (correctAnswers === questions.length) {
-                    showValentineQuestion();
+                    setTimeout(showValentineQuestion, 500); // Показываем гифку через 0.5 сек
                 }
             }
         };
