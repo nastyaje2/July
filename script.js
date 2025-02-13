@@ -86,7 +86,7 @@ questions.forEach((q, index) => {
                 button.disabled = true;
 
                 if (correctAnswers === questions.length) {
-                    setTimeout(showValentineQuestion, 500); // Показываем гифку через 0.5 сек
+                    setTimeout(showValentineQuestion, 500);
                 }
             }
         };
@@ -98,42 +98,24 @@ questions.forEach((q, index) => {
 });
 
 function showValentineQuestion() {
-    quizDiv.style.display = "none"; // Скрываем викторину
-    resultDiv.innerHTML = `Well done, you are umnichka! You made ${mistakes} mistakes.`;
+    quizDiv.style.display = "none"; 
+    resultDiv.innerHTML = `Well done! You're umnichka! You made ${mistakes} mistakes.`;
 
-    valentineDiv.innerHTML = ""; // Очищаем Valentine блок перед добавлением контента
-    valentineDiv.style.display = "block"; // Показываем Valentine блок
+    valentineDiv.style.display = "block"; 
 
-    const gif = document.createElement("img");
-    gif.src = "cat.gif";
-    gif.alt = "Cat GIF";
+    valentineDiv.innerHTML = `
+        <img src="cat.gif" alt="Cat GIF">
+        <h1>Will you be my Valentine?</h1>
+        <div class="buttons">
+            <button onclick="alert('Super! Yay! Happy Valentine\'s Day! ❤️')">Yes</button>
+            <button id="no">No</button>
+        </div>
+    `;
 
-    const question = document.createElement("h1");
-    question.textContent = "Will you be my Valentine?";
-
-    const buttonsDiv = document.createElement("div");
-    buttonsDiv.classList.add("buttons");
-
-    const yesButton = document.createElement("button");
-    yesButton.textContent = "Yes";
-    yesButton.onclick = function() {
-        alert("Super! Yay! Happy Valentine's Day! ❤️");
-    };
-
-    const noButton = document.createElement("button");
-    noButton.textContent = "No";
-    noButton.id = "no";
-
+    const noButton = document.getElementById("no");
     noButton.onmouseover = function() {
         this.style.position = "absolute";
         this.style.left = Math.random() * (window.innerWidth - 100) + "px";
         this.style.top = Math.random() * (window.innerHeight - 50) + "px";
     };
-
-    buttonsDiv.appendChild(yesButton);
-    buttonsDiv.appendChild(noButton);
-
-    valentineDiv.appendChild(gif);
-    valentineDiv.appendChild(question);
-    valentineDiv.appendChild(buttonsDiv);
 }
