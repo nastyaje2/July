@@ -62,6 +62,14 @@ let correctAnswers = 0;
 const quizDiv = document.getElementById("quiz");
 const gifDiv = document.getElementById("gif-screen");
 const valentineDiv = document.getElementById("valentine");
+const gifImage = document.createElement("img");
+
+gifImage.src = "cat.gif"; // Убедись, что название точное!
+gifImage.style.width = "300px"; 
+gifImage.style.height = "auto";
+gifImage.style.display = "none";
+gifImage.id = "gif";
+document.body.appendChild(gifImage); // Добавляем гифку на страницу
 
 questions.forEach((q, index) => {
     const div = document.createElement("div");
@@ -99,10 +107,10 @@ questions.forEach((q, index) => {
 
 function showGif() {
     quizDiv.style.display = "none";
-    gifDiv.style.display = "block";
+    gifImage.style.display = "block"; // Показываем гифку
 
     setTimeout(() => {
-        gifDiv.style.display = "none";
+        gifImage.style.display = "none";
         valentineDiv.style.display = "block";
     }, 2000);
 }
