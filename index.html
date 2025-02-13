@@ -8,98 +8,152 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #ffebf0;
+            background-color: #ffe6f2;
         }
         .container {
-            max-width: 600px;
+            width: 60%;
             margin: auto;
             padding: 20px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        button {
+        .question {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .options button {
             display: block;
             width: 100%;
             padding: 10px;
-            margin: 10px 0;
+            margin: 5px 0;
             border: none;
-            background-color: #ff4081;
+            background: #ff99cc;
             color: white;
             font-size: 18px;
             cursor: pointer;
             border-radius: 5px;
         }
-        button:hover {
-            background-color: #e91e63;
+        .options button:hover {
+            background: #ff66a3;
         }
-        #result {
-            font-size: 20px;
-            margin-top: 20px;
+        #nextBtn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #ff4d94;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #nextBtn:hover {
+            background: #e60073;
+        }
+        .valentine-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .valentine-container img {
+            width: 200px;
+            height: auto;
+        }
+        .yes-no-buttons {
+            position: relative;
+        }
+        .yes-no-buttons button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .yes {
+            background: #ff4d94;
+            color: white;
+        }
+        .yes:hover {
+            background: #e60073;
+        }
+        .no {
+            background: #999;
+            color: white;
+            position: absolute;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Quiz for Julian</h1>
-        <p id="question"></p>
-        <div id="answers"></div>
-        <button id="next" onclick="nextQuestion()" style="display:none;">Next</button>
-        <p id="result"></p>
+    <div class="container" id="quizContainer">
+        <h2 class="question" id="questionText">Loading...</h2>
+        <div class="options" id="optionsContainer"></div>
+        <button id="nextBtn" onclick="nextQuestion()">Next</button>
+    </div>
+
+    <div class="valentine-container" id="valentineContainer" style="display:none;">
+        <h2>Will you be my Valentine?</h2>
+        <img src="cat.gif" alt="Cute Cat GIF">
+        <div class="yes-no-buttons">
+            <button class="yes" onclick="alert('Yay! ❤️')">Yes</button>
+            <button class="no" id="noBtn">No</button>
+        </div>
     </div>
 
     <script>
         const questions = [
-            { q: "Where will we live?", a: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: "Barcelona" },
-            { q: "What should we name our future pet?", a: ["Remy", "Luna", "Julian"], correct: "Julian" },
-            { q: "Who will say 'I love you' first today?", a: ["I", "You"], correct: "I" },
-            { q: "What's our dream vacation?", a: ["Malta", "France", "Albania"], correct: "Malta" },
-            { q: "What would be our couple superpower?", a: ["Solving all arguments", "Being invisible", "Flying"], correct: "Solving all arguments" },
-            { q: "If we had a time machine, where would we go first?", a: ["Future", "Past"], correct: "Future" },
-            { q: "Who is more likely to get lost in a mall?", a: ["I", "You"], correct: "You" },
-            { q: "If we had a magic lamp, what would our first wish be?", a: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: "We both become millionaires" },
-            { q: "If we had a secret hideout, where would it be?", a: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: "Under a palm tree" },
-            { q: "Which pet would suit us best?", a: ["Dragon", "Raccoon", "Dog"], correct: "Dragon" },
-            { q: "Which animated couple are we most like?", a: ["Mike & Sulley", "Shrek & Fiona", "Nick & Judy (Zootopia)"], correct: "Nick & Judy (Zootopia)" }
+            { question: "Where will we live?", options: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: 1 },
+            { question: "What should we name our future pet?", options: ["Remy", "Luna", "Julian"], correct: 2 },
+            { question: "Who will say 'I love you' first today?", options: ["I", "You"], correct: 0 },
+            { question: "What’s our dream vacation?", options: ["Malta", "France", "Albania"], correct: 0 },
+            { question: "What would be our couple superpower?", options: ["Solving all arguments", "Being invisible", "Flying"], correct: 0 },
+            { question: "If we had a time machine, where would we go first?", options: ["Future", "Past"], correct: 0 },
+            { question: "Who is more likely to get lost in a mall?", options: ["I", "You"], correct: 1 },
+            { question: "If we had a magic lamp, what would our first wish be?", options: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: 0 },
+            { question: "If we had a secret hideout, where would it be?", options: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: 0 },
+            { question: "If we had a pet dragon, what would we name it?", options: ["Smaug", "Toothless", "Spyro"], correct: 1 },
+            { question: "Which animated duo are we most like?", options: ["Mike & Sulley", "Shrek & Fiona", "Nick & Judy"], correct: 2 }
         ];
-        
+
         let currentQuestion = 0;
         let mistakes = 0;
 
-        function showQuestion() {
-            document.getElementById("question").innerText = questions[currentQuestion].q;
-            let answersDiv = document.getElementById("answers");
-            answersDiv.innerHTML = "";
-            questions[currentQuestion].a.forEach(answer => {
-                let btn = document.createElement("button");
-                btn.innerText = answer;
-                btn.onclick = function() { checkAnswer(answer); };
-                answersDiv.appendChild(btn);
+        function loadQuestion() {
+            let q = questions[currentQuestion];
+            document.getElementById("questionText").innerText = q.question;
+            let optionsHtml = "";
+            q.options.forEach((option, index) => {
+                optionsHtml += `<button onclick="checkAnswer(${index})">${option}</button>`;
             });
+            document.getElementById("optionsContainer").innerHTML = optionsHtml;
         }
 
-        function checkAnswer(answer) {
-            if (answer !== questions[currentQuestion].correct) {
+        function checkAnswer(index) {
+            if (index !== questions[currentQuestion].correct) {
                 mistakes++;
                 alert("Wrong! Try again.");
-                return;
+            } else {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    loadQuestion();
+                } else {
+                    document.getElementById("quizContainer").style.display = "none";
+                    document.getElementById("valentineContainer").style.display = "flex";
+                }
             }
-            document.getElementById("next").style.display = "block";
         }
 
-        function nextQuestion() {
-            currentQuestion++;
-            document.getElementById("next").style.display = "none";
-            if (currentQuestion < questions.length) {
-                showQuestion();
-            } else {
-                document.querySelector(".container").innerHTML = `<h1>Well done, you're umnichka!</h1><p>You made ${mistakes} mistakes.</p><br><a href="valentine.html"><button>Go to Surprise</button></a>`;
-            }
-        }
-        
-        showQuestion();
+        document.getElementById("noBtn").addEventListener("mouseover", function() {
+            this.style.top = Math.random() * 200 + "px";
+            this.style.left = Math.random() * 200 + "px";
+        });
+
+        loadQuestion();
     </script>
 </body>
 </html>
+
 
 
