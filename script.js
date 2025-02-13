@@ -61,6 +61,7 @@ let correctAnswers = 0;
 
 const quizDiv = document.getElementById("quiz");
 const resultDiv = document.getElementById("result");
+const valentineDiv = document.getElementById("valentine");
 
 questions.forEach((q, index) => {
     const div = document.createElement("div");
@@ -97,15 +98,15 @@ questions.forEach((q, index) => {
 });
 
 function showValentineQuestion() {
-    quizDiv.innerHTML = ""; // Очищаем викторину
+    quizDiv.style.display = "none"; // Скрываем викторину
     resultDiv.innerHTML = `Well done, you are umnichka! You made ${mistakes} mistakes.`;
 
-    const valentineDiv = document.createElement("div");
-    valentineDiv.classList.add("valentine-container");
+    valentineDiv.innerHTML = ""; // Очищаем Valentine блок перед добавлением контента
+    valentineDiv.style.display = "block"; // Показываем Valentine блок
 
     const gif = document.createElement("img");
     gif.src = "cat.gif";
-    gif.alt = "Cute cat GIF";
+    gif.alt = "Cat GIF";
 
     const question = document.createElement("h1");
     question.textContent = "Will you be my Valentine?";
@@ -125,8 +126,8 @@ function showValentineQuestion() {
 
     noButton.onmouseover = function() {
         this.style.position = "absolute";
-        this.style.left = Math.random() * window.innerWidth + "px";
-        this.style.top = Math.random() * window.innerHeight + "px";
+        this.style.left = Math.random() * (window.innerWidth - 100) + "px";
+        this.style.top = Math.random() * (window.innerHeight - 50) + "px";
     };
 
     buttonsDiv.appendChild(yesButton);
@@ -135,6 +136,4 @@ function showValentineQuestion() {
     valentineDiv.appendChild(gif);
     valentineDiv.appendChild(question);
     valentineDiv.appendChild(buttonsDiv);
-
-    document.body.appendChild(valentineDiv);
 }
