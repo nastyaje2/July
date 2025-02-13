@@ -128,6 +128,12 @@
                 resultContainer.classList.remove("hidden");
                 resultText.textContent = `You made ${mistakes} mistakes.`;
             }
+            
+        function selectAnswer(answer) {
+            if (answer !== questions[currentQuestion].correct) {
+                mistakes++;
+                alert("Wrong answer! Try again.");
+                return;
         };
         
         continueButton.onclick = () => {
