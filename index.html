@@ -3,134 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz</title>
+    <title>Quiz for Julian</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #ffe6f2;
+            background-color: #ffe6e6;
+            color: #333;
+            padding: 20px;
         }
-        .container {
+        .quiz-container {
             max-width: 600px;
-            margin: 50px auto;
+            margin: auto;
             background: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .hidden {
-            display: none;
-        }
         button {
             margin-top: 10px;
-            padding: 10px;
-            background: #ff6699;
-            color: white;
+            padding: 10px 20px;
+            background-color: #ff6699;
             border: none;
-            border-radius: 5px;
+            color: white;
             cursor: pointer;
+            border-radius: 5px;
         }
         button:hover {
-            background: #ff3366;
+            background-color: #ff3366;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Our Special Quiz</h1>
+    <div class="quiz-container">
+        <h1>Quiz for Julian</h1>
         <div id="quiz"></div>
-        <button id="next" class="hidden">Next</button>
-        <button id="submit" class="hidden">Go to Surprise</button>
+        <button onclick="nextQuestion()">Next</button>
+        <p id="result" style="display: none;"></p>
     </div>
+
     <script>
         const questions = [
-            { 
-                question: "Where will we live?", 
-                answers: ["Toronto", "Barcelona", "Africa", "Greenland"],
-                correct: "Barcelona"
-            },
-            { 
-                question: "What should we name our future pet?", 
-                answers: ["Remy", "Luna", "Julian"],
-                correct: "Julian"
-            },
-            { 
-                question: "Who will say ‘I love you’ first today?", 
-                answers: ["Me", "You"],
-                correct: "Me"
-            },
-            { 
-                question: "What’s our dream destination?", 
-                answers: ["Malta", "France", "Albania"],
-                correct: "Malta"
-            },
-            { 
-                question: "What would be our couple superpower?", 
-                answers: ["Solving all arguments", "Being invisible", "Flying"],
-                correct: "Solving all arguments"
-            },
-            { 
-                question: "If we had a time machine, where would we go first?", 
-                answers: ["Future", "Past"],
-                correct: "Future"
-            },
-            { 
-                question: "Who is more likely to get lost in a mall?", 
-                answers: ["Me", "You"],
-                correct: "You"
-            },
-            { 
-                question: "If we had a magic lamp, what would our first wish be?", 
-                answers: ["We both become millionaires", "We teleport to each other", "Endless free food"],
-                correct: "We both become millionaires"
-            },
-            { 
-                question: "If we had a secret hideout, where would it be?", 
-                answers: ["Under a palm tree", "On a tree", "Inside a secret cave"],
-                correct: "Under a palm tree"
-            }
+            { q: "Where will we live?", options: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: "Barcelona" },
+            { q: "What should we name our future pet?", options: ["Remy", "Luna", "Julian"], correct: "Julian" },
+            { q: "Who will say 'I love you' first today?", options: ["I", "You"], correct: "I" },
+            { q: "What's our dream vacation?", options: ["Malta", "France", "Albania"], correct: "Malta" },
+            { q: "What would be our couple superpower?", options: ["Solving all arguments", "Being invisible", "Flying"], correct: "Solving all arguments" },
+            { q: "If we had a time machine, where would we go first?", options: ["Future", "Past"], correct: "Future" },
+            { q: "Who is more likely to get lost in a mall?", options: ["I", "You"], correct: "You" },
+            { q: "If we had a magic lamp, what would our first wish be?", options: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: "We both become millionaires" },
+            { q: "If we had a secret hideout, where would it be?", options: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: "Under a palm tree" },
+            { q: "If we had a pet, what would it be?", options: ["Dragon", "Raccoon", "Fox"], correct: "Dragon" },
+            { q: "Which animated duo are we most like?", options: ["Mike & Sulley", "Shrek & Fiona", "Nick & Judy (Zootopia)"], correct: "Nick & Judy (Zootopia)" }
         ];
 
         let currentQuestion = 0;
-        const quizContainer = document.getElementById("quiz");
-        const nextButton = document.getElementById("next");
-        const submitButton = document.getElementById("submit");
+        let mistakes = 0;
 
-        function loadQuestion() {
-            const q = questions[currentQuestion];
-            quizContainer.innerHTML = `<h2>${q.question}</h2>`;
-            q.answers.sort(() => Math.random() - 0.5); // Shuffle answers
-            q.answers.forEach(answer => {
-                quizContainer.innerHTML += `<div><input type='radio' name='answer' value='${answer}'> ${answer}</div>`;
+        function showQuestion() {
+            const quizDiv = document.getElementById("quiz");
+            quizDiv.innerHTML = "";
+            const question = questions[currentQuestion];
+            const questionTitle = document.createElement("h2");
+            questionTitle.innerText = question.q;
+            quizDiv.appendChild(questionTitle);
+            question.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = function() {
+                    if (option !== question.correct) mistakes++;
+                    nextQuestion();
+                };
+                quizDiv.appendChild(button);
             });
         }
 
-        function checkAnswer() {
-            const selected = document.querySelector("input[name='answer']:checked");
-            if (!selected) return;
-            if (selected.value === questions[currentQuestion].correct) {
-                currentQuestion++;
-                if (currentQuestion < questions.length) {
-                    loadQuestion();
-                } else {
-                    quizContainer.innerHTML = "<h2>Congratulations! Click below for your surprise.</h2>";
-                    nextButton.classList.add("hidden");
-                    submitButton.classList.remove("hidden");
-                }
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
             } else {
-                alert("Try again dummy!");
+                document.getElementById("quiz").style.display = "none";
+                document.querySelector("button").style.display = "none";
+                document.getElementById("result").style.display = "block";
+                document.getElementById("result").innerText = `Well done! You're umnichka! You made only ${mistakes} mistakes.`;
+                setTimeout(() => { window.location.href = "surprise.html"; }, 3000);
             }
         }
 
-        nextButton.addEventListener("click", checkAnswer);
-        submitButton.addEventListener("click", () => {
-            window.location.href = "surprise.html";
-        });
-
-        loadQuestion();
-        nextButton.classList.remove("hidden");
+        showQuestion();
     </script>
 </body>
 </html>
-
-
