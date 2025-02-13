@@ -10,7 +10,7 @@ const questions = [
         answer: "Julian"
     },
     { 
-        question: "Who will say “I love you” first today?", 
+        question: "Who will say 'I love you' first today?", 
         options: ["I", "You"], 
         answer: "I"
     },
@@ -60,9 +60,8 @@ let mistakes = 0;
 let correctAnswers = 0;
 
 const quizDiv = document.getElementById("quiz");
-const resultDiv = document.getElementById("result");
+const gifDiv = document.getElementById("gif-screen");
 const valentineDiv = document.getElementById("valentine");
-const mistakeCount = document.getElementById("mistakeCount");
 
 questions.forEach((q, index) => {
     const div = document.createElement("div");
@@ -87,7 +86,7 @@ questions.forEach((q, index) => {
                 button.disabled = true;
 
                 if (correctAnswers === questions.length) {
-                    showValentineQuestion();
+                    showGif();
                 }
             }
         };
@@ -98,15 +97,20 @@ questions.forEach((q, index) => {
     quizDiv.appendChild(div);
 });
 
-function showValentineQuestion() {
+function showGif() {
     quizDiv.style.display = "none";
-    mistakeCount.textContent = mistakes;
-    valentineDiv.style.display = "block";
+    gifDiv.style.display = "block";
 
-    const noButton = document.getElementById("no");
-    noButton.onmouseover = function() {
-        this.style.position = "absolute";
-        this.style.left = Math.random() * (window.innerWidth - 100) + "px";
-        this.style.top = Math.random() * (window.innerHeight - 50) + "px";
-    };
+    setTimeout(() => {
+        gifDiv.style.display = "none";
+        valentineDiv.style.display = "block";
+    }, 2000);
 }
+
+// Moving "No" button
+const noButton = document.getElementById("no");
+noButton.onmouseover = function() {
+    this.style.position = "absolute";
+    this.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    this.style.top = Math.random() * (window.innerHeight - 50) + "px";
+};
