@@ -60,6 +60,7 @@ let mistakes = 0;
 let correctAnswers = 0;
 
 const quizDiv = document.getElementById("quiz");
+const resultDiv = document.getElementById("result");
 
 questions.forEach((q, index) => {
     const div = document.createElement("div");
@@ -84,10 +85,7 @@ questions.forEach((q, index) => {
                 button.disabled = true;
 
                 if (correctAnswers === questions.length) {
-                    document.getElementById("result").textContent = `Well done, you are umnichka! You made ${mistakes} mistakes.`;
-                    setTimeout(() => {
-                        window.location.href = "valentine.html";
-                    }, 2000);
+                    showValentineQuestion();
                 }
             }
         };
@@ -97,3 +95,46 @@ questions.forEach((q, index) => {
     div.appendChild(optionsDiv);
     quizDiv.appendChild(div);
 });
+
+function showValentineQuestion() {
+    quizDiv.innerHTML = ""; // Очищаем викторину
+    resultDiv.innerHTML = `Well done, you are umnichka! You made ${mistakes} mistakes.`;
+
+    const valentineDiv = document.createElement("div");
+    valentineDiv.classList.add("valentine-container");
+
+    const gif = document.createElement("img");
+    gif.src = "cat.gif";
+    gif.alt = "Cute cat GIF";
+
+    const question = document.createElement("h1");
+    question.textContent = "Will you be my Valentine?";
+
+    const buttonsDiv = document.createElement("div");
+    buttonsDiv.classList.add("buttons");
+
+    const yesButton = document.createElement("button");
+    yesButton.textContent = "Yes";
+    yesButton.onclick = function() {
+        alert("Super! Yay! Happy Valentine's Day! ❤️");
+    };
+
+    const noButton = document.createElement("button");
+    noButton.textContent = "No";
+    noButton.id = "no";
+
+    noButton.onmouseover = function() {
+        this.style.position = "absolute";
+        this.style.left = Math.random() * window.innerWidth + "px";
+        this.style.top = Math.random() * window.innerHeight + "px";
+    };
+
+    buttonsDiv.appendChild(yesButton);
+    buttonsDiv.appendChild(noButton);
+
+    valentineDiv.appendChild(gif);
+    valentineDiv.appendChild(question);
+    valentineDiv.appendChild(buttonsDiv);
+
+    document.body.appendChild(valentineDiv);
+}
