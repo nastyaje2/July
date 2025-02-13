@@ -3,151 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game</title>
+    <title>Valentine's Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #ffe6e6;
+            background-color: #fce4ec;
             color: #333;
         }
-        .quiz-container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .question {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .options button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: none;
-            border-radius: 5px;
-            background-color: #ffb6c1;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .options button:hover {
-            background-color: #ff9999;
-        }
-        #result {
-            font-size: 18px;
-            margin-top: 20px;
-        }
-        .hidden {
+        #quiz-container, #result-container {
             display: none;
+            margin-top: 50px;
         }
-        .valentine-container {
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .btn-next {
+            background-color: #f8bbd0;
+            color: #333;
+        }
+        .btn-next:hover {
+            background-color: #f48fb1;
+        }
+        #final-container {
+            display: none;
+            margin-top: 50px;
+        }
+        #gif-container {
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
         }
-        .valentine-container img {
-            width: 300px;
-        }
-        .valentine-buttons {
+        .answer-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
             margin-top: 20px;
         }
-        .valentine-buttons button {
+        .btn-yes, .btn-no {
             padding: 10px 20px;
-            margin: 10px;
             border: none;
-            border-radius: 5px;
-            background-color: #ffb6c1;
-            color: white;
-            font-size: 16px;
             cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: 0.3s;
+            position: relative;
         }
-        .valentine-buttons button:hover {
-            background-color: #ff9999;
+        .btn-yes {
+            background-color: #ffccbc;
+            color: #333;
         }
-        #noButton {
-            position: absolute;
-            transition: all 0.3s ease;
+        .btn-yes:hover {
+            background-color: #ffab91;
+        }
+        .btn-no {
+            background-color: #ef9a9a;
+            color: #333;
+        }
+        .btn-no:hover {
+            background-color: #e57373;
         }
     </style>
 </head>
 <body>
-    <div class="quiz-container" id="quiz-container">
-        <div id="question-container">
-            <p class="question" id="question"></p>
-            <div class="options" id="options"></div>
-        </div>
-        <button id="next-btn" class="hidden">Next</button>
-        <p id="result" class="hidden"></p>
+    <div id="quiz-container">
+        <h2>Valentine's Quiz</h2>
+        <p id="question-text"></p>
+        <div id="answer-buttons" class="answer-buttons"></div>
+        <button id="next-btn" class="btn btn-next" onclick="nextQuestion()">Next</button>
     </div>
     
-    <div class="valentine-container hidden" id="valentine-container">
-        <h2>Will you be my Valentine?</h2>
-        <img src="cat.gif" alt="Cute Cat">
-        <div class="valentine-buttons">
-            <button id="yesButton">Yes</button>
-            <button id="noButton">No</button>
+    <div id="result-container">
+        <h2>Well done, you are amazing!</h2>
+        <p id="score-text"></p>
+        <button class="btn btn-next" onclick="showFinalScreen()">Continue</button>
+    </div>
+    
+    <div id="final-container">
+        <div id="gif-container">
+            <h2>Will you be my Valentine?</h2>
+            <img src="cat.gif" alt="Cute Cat">
+            <div class="answer-buttons">
+                <button class="btn-yes" onclick="acceptValentine()">Yes</button>
+                <button class="btn-no" onmouseover="moveButton()">No</button>
+            </div>
         </div>
     </div>
-
+    
     <script>
-        const quizData = [
-            { question: "Where will we live?", options: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: 1 },
-            { question: "What should we name our future pet?", options: ["Remy", "Luna", "Julian"], correct: 2 },
-            { question: "Who will say 'I love you' first today?", options: ["I", "You"], correct: 0 },
-            { question: "What’s our dream vacation?", options: ["Malta", "France", "Albania"], correct: 0 },
-            { question: "What would be our couple superpower?", options: ["Solving all arguments", "Being invisible", "Flying"], correct: 0 },
-            { question: "If we had a time machine, where would we go first?", options: ["Future", "Past"], correct: 0 },
-            { question: "Who is more likely to get lost in a mall?", options: ["I", "You"], correct: 1 },
-            { question: "If we had a magic lamp, what would our first wish be?", options: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: 0 },
-            { question: "If we had a secret hideout, where would it be?", options: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: 0 },
-            { question: "What would be our pet?", options: ["Raccoon", "Small dragon", "Parrot"], correct: 1 }
+        let questions = [
+            { question: "Where will we live?", answers: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: 1 },
+            { question: "What should we name our future pet?", answers: ["Remy", "Luna", "Julian"], correct: 2 },
+            { question: "Who will say 'I love you' first today?", answers: ["I", "You"], correct: 0 },
+            { question: "What’s our dream vacation?", answers: ["Malta", "France", "Albania"], correct: 0 },
+            { question: "What would be our couple superpower?", answers: ["Solving all arguments", "Being invisible", "Flying"], correct: 0 },
+            { question: "If we had a time machine, where would we go first?", answers: ["Future", "Past"], correct: 0 },
+            { question: "Who is more likely to get lost in a mall?", answers: ["I", "You"], correct: 1 },
+            { question: "If we had a magic lamp, what would our first wish be?", answers: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: 0 },
+            { question: "If we had a secret hideout, where would it be?", answers: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: 0 },
+            { question: "What pet should we have?", answers: ["Raccoon", "Little dragon", "Parrot"], correct: 1 }
         ];
+
         let currentQuestionIndex = 0;
-        let mistakes = 0;
-        const questionElement = document.getElementById("question");
-        const optionsElement = document.getElementById("options");
-        const nextButton = document.getElementById("next-btn");
-        const resultElement = document.getElementById("result");
-        function loadQuestion() {
-            const currentQuestion = quizData[currentQuestionIndex];
-            questionElement.textContent = currentQuestion.question;
-            optionsElement.innerHTML = "";
-            currentQuestion.options.forEach((option, index) => {
-                const button = document.createElement("button");
-                button.textContent = option;
-                button.onclick = () => checkAnswer(index);
-                optionsElement.appendChild(button);
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById("quiz-container").style.display = "block";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            let questionElement = document.getElementById("question-text");
+            let answerButtons = document.getElementById("answer-buttons");
+            let question = questions[currentQuestionIndex];
+
+            questionElement.textContent = question.question;
+            answerButtons.innerHTML = "";
+
+            question.answers.forEach((answer, index) => {
+                let button = document.createElement("button");
+                button.classList.add("btn");
+                button.textContent = answer;
+                button.onclick = () => selectAnswer(index);
+                answerButtons.appendChild(button);
             });
         }
-        function checkAnswer(selectedIndex) {
-            const correctIndex = quizData[currentQuestionIndex].correct;
-            if (selectedIndex !== correctIndex) {
-                alert("Wrong answer! Try again.");
-                mistakes++;
-                return;
+
+        function selectAnswer(index) {
+            if (index === questions[currentQuestionIndex].correct) {
+                score++;
             }
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizData.length) {
-                loadQuestion();
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
             } else {
-                quizContainer.classList.add("hidden");
-                document.getElementById("valentine-container").classList.remove("hidden");
+                showResult();
             }
         }
-        loadQuestion();
-        const noButton = document.getElementById("noButton");
-        noButton.addEventListener("mouseover", function() {
-            const randomX = Math.random() * window.innerWidth * 0.5;
-            const randomY = Math.random() * window.innerHeight * 0.5;
-            noButton.style.transform = `translate(${randomX}px, ${randomY}px)`;
-        });
+
+        function showResult() {
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("result-container").style.display = "block";
+            document.getElementById("score-text").textContent = `You made ${questions.length - score} mistakes.`;
+        }
+
+        function showFinalScreen() {
+            document.getElementById("result-container").style.display = "none";
+            document.getElementById("final-container").style.display = "block";
+        }
+
+        function moveButton() {
+            let button = document.querySelector(".btn-no");
+            let x = Math.random() * (window.innerWidth - 100);
+            let y = Math.random() * (window.innerHeight - 50);
+            button.style.position = "absolute";
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+        }
     </script>
 </body>
 </html>
