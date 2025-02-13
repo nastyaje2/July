@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Викторина</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        .question { margin-bottom: 20px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <h1>Викторина</h1>
+    <div id="quiz">
+        <div class="question">
+            <p>Где мы будем жить?</p>
+            <button onclick="checkAnswer(this, 'correct')">Торонто</button>
+            <button onclick="checkAnswer(this, 'wrong')">Париж</button>
+            <button onclick="checkAnswer(this, 'wrong')">Нью-Йорк</button>
+            <button onclick="checkAnswer(this, 'wrong')">Барселона</button>
+        </div>
+        <div class="question hidden">
+            <p>Как назовём питомца?</p>
+            <button onclick="checkAnswer(this, 'wrong')">Луна</button>
+            <button onclick="checkAnswer(this, 'wrong')">Бублик</button>
+            <button onclick="checkAnswer(this, 'correct')">Чарли</button>
+            <button onclick="checkAnswer(this, 'wrong')">Дракон</button>
+        </div>
+        <div id="result" class="hidden">
+            <h2>Поздравляем! Ты прошёл(а) викторину!</h2>
+            <a href="hidden_page.html">Перейти к сюрпризу</a>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        const questions = document.querySelectorAll('.question');
+
+        function checkAnswer(button, type) {
+            if (type === 'correct') {
+                questions[currentQuestion].classList.add('hidden');
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    questions[currentQuestion].classList.remove('hidden');
+                } else {
+                    document.getElementById('quiz').innerHTML = document.getElementById('result').outerHTML;
+                }
+            } else {
+                alert('Неправильный ответ! Попробуй снова.');
+            }
+        }
+    </script>
+</body>
+</html>
