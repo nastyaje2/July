@@ -1,87 +1,136 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Викторина</title>
+    <title>Quiz</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             text-align: center;
-            margin: 50px;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4);
-            color: #333;
+            background-color: #ffe6f2;
         }
-        .question {
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.8);
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-        }
-        button {
-            background: #ff758c;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 16px;
             border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover {
-            background: #ff5e62;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .hidden {
             display: none;
         }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background: #ff6699;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff3366;
+        }
     </style>
 </head>
 <body>
-    <h1>Викторина</h1>
-    <div id="quiz">
-        <div class="question">
-            <p>Где мы будем жить?</p>
-            <button onclick="checkAnswer(this, 'correct')">Торонто</button>
-            <button onclick="checkAnswer(this, 'wrong')">Париж</button>
-            <button onclick="checkAnswer(this, 'wrong')">Нью-Йорк</button>
-            <button onclick="checkAnswer(this, 'wrong')">Барселона</button>
-        </div>
-        <div class="question hidden">
-            <p>Как назовём питомца?</p>
-            <button onclick="checkAnswer(this, 'wrong')">Луна</button>
-            <button onclick="checkAnswer(this, 'wrong')">Бублик</button>
-            <button onclick="checkAnswer(this, 'correct')">Чарли</button>
-            <button onclick="checkAnswer(this, 'wrong')">Дракон</button>
-        </div>
-        <div id="result" class="hidden">
-            <h2>Поздравляем! Ты прошёл(а) викторину!</h2>
-            <a href="hidden_page.html" style="color: #ff758c; font-size: 18px; text-decoration: none; font-weight: bold;">Перейти к сюрпризу</a>
-        </div>
+    <div class="container">
+        <h1>Our Special Quiz</h1>
+        <div id="quiz"></div>
+        <button id="next" class="hidden">Next</button>
+        <button id="submit" class="hidden">Go to Surprise</button>
     </div>
-
     <script>
+        const questions = [
+            { 
+                question: "Where will we live?", 
+                answers: ["Toronto", "Barcelona", "Africa", "Greenland"],
+                correct: "Barcelona"
+            },
+            { 
+                question: "What should we name our future pet?", 
+                answers: ["Remy", "Luna", "Julian"],
+                correct: "Julian"
+            },
+            { 
+                question: "Who will say ‘I love you’ first today?", 
+                answers: ["I", "You"],
+                correct: "I"
+            },
+            { 
+                question: "What’s our dream vacation?", 
+                answers: ["Malta", "France", "Albania"],
+                correct: "Malta"
+            },
+            { 
+                question: "What would be our couple superpower?", 
+                answers: ["Solving all arguments", "Being invisible", "Flying"],
+                correct: "Solving all arguments"
+            },
+            { 
+                question: "If we had a time machine, where would we go first?", 
+                answers: ["Future", "Past"],
+                correct: "Future"
+            },
+            { 
+                question: "Who is more likely to get lost in a mall?", 
+                answers: ["I", "You"],
+                correct: "You"
+            },
+            { 
+                question: "If we had a magic lamp, what would our first wish be?", 
+                answers: ["We both become millionaires", "We teleport to each other", "Endless free food"],
+                correct: "We both become millionaires"
+            },
+            { 
+                question: "If we had a secret hideout, where would it be?", 
+                answers: ["Under a palm tree", "On a tree", "Inside a secret cave"],
+                correct: "Under a palm tree"
+            }
+        ];
+
         let currentQuestion = 0;
-        const questions = document.querySelectorAll('.question');
-        const resultDiv = document.getElementById('result');
-        
-        function checkAnswer(button, type) {
-            if (type === 'correct') {
-                questions[currentQuestion].classList.add('hidden');
+        const quizContainer = document.getElementById("quiz");
+        const nextButton = document.getElementById("next");
+        const submitButton = document.getElementById("submit");
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            quizContainer.innerHTML = `<h2>${q.question}</h2>`;
+            q.answers.sort(() => Math.random() - 0.5); // Shuffle answers
+            q.answers.forEach(answer => {
+                quizContainer.innerHTML += `<div><input type='radio' name='answer' value='${answer}'> ${answer}</div>`;
+            });
+        }
+
+        function checkAnswer() {
+            const selected = document.querySelector("input[name='answer']:checked");
+            if (!selected) return;
+            if (selected.value === questions[currentQuestion].correct) {
                 currentQuestion++;
                 if (currentQuestion < questions.length) {
-                    questions[currentQuestion].classList.remove('hidden');
+                    loadQuestion();
                 } else {
-                    document.getElementById('quiz').innerHTML = resultDiv.outerHTML;
-                    document.getElementById('result').classList.remove('hidden');
+                    quizContainer.innerHTML = "<h2>Congratulations! Click below for your surprise.</h2>";
+                    nextButton.classList.add("hidden");
+                    submitButton.classList.remove("hidden");
                 }
             } else {
-                alert('Неправильный ответ! Попробуй снова.');
+                alert("Try again!");
             }
         }
+
+        nextButton.addEventListener("click", checkAnswer);
+        submitButton.addEventListener("click", () => {
+            window.location.href = "surprise.html";
+        });
+
+        loadQuestion();
+        nextButton.classList.remove("hidden");
     </script>
 </body>
 </html>
+
 
