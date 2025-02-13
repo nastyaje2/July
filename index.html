@@ -8,7 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #ffe6ea;
+            background-color: #ffe6f0;
         }
         .container {
             max-width: 600px;
@@ -19,118 +19,122 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .question {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 18px;
+            margin-bottom: 15px;
         }
-        .options button {
+        .answers button {
             display: block;
             width: 100%;
-            padding: 10px;
             margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             background-color: #d9d9d9;
         }
-        .options button:hover {
+        .answers button:hover {
             background-color: #bfbfbf;
         }
         .hidden {
             display: none;
         }
-        #yes-no-container {
-            margin-top: 20px;
+        #valentine {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #gif {
+            width: 300px;
+            height: auto;
+        }
+        .yes-no-buttons {
+            position: relative;
         }
         #yes, #no {
             padding: 10px 20px;
-            font-size: 18px;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             background-color: #d9d9d9;
+            position: absolute;
         }
         #yes {
-            position: relative;
+            left: 40px;
         }
         #no {
-            position: absolute;
+            left: 120px;
+        }
+        #no:hover {
+            left: calc(50% + (Math.random() * 200 - 100)px);
+            top: calc(50% + (Math.random() * 200 - 100)px);
         }
     </style>
 </head>
 <body>
     <div class="container" id="quiz-container">
         <div id="question-container">
-            <p class="question" id="question-text"></p>
-            <div class="options" id="options"></div>
+            <p class="question" id="question"></p>
+            <div class="answers" id="answers"></div>
         </div>
-        <button id="next-button" class="hidden">Next</button>
+        <p id="result" class="hidden"></p>
     </div>
-    <div id="valentine-container" class="hidden">
+    <div id="valentine" class="hidden">
         <h1>Will you be my Valentine?</h1>
-        <img src="valentine.gif" alt="Cute gif">
-        <div id="yes-no-container">
+        <img id="gif" src="your-cat-gif.gif" alt="Cute Cat">
+        <div class="yes-no-buttons">
             <button id="yes">Yes</button>
             <button id="no">No</button>
         </div>
     </div>
     <script>
         const questions = [
-            { q: "Where will we live?", options: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: "Barcelona" },
-            { q: "What should we name our future pet?", options: ["Remy", "Luna", "Julian"], correct: "Julian" },
-            { q: "Who will say 'I love you' first today?", options: ["I", "You"], correct: "I" },
-            { q: "What's our dream vacation?", options: ["Malta", "France", "Albania"], correct: "Malta" },
-            { q: "What would be our couple superpower?", options: ["Solving all arguments", "Being invisible", "Flying"], correct: "Solving all arguments" },
-            { q: "If we had a time machine, where would we go first?", options: ["Future", "Past"], correct: "Future" },
-            { q: "Who is more likely to get lost in a mall?", options: ["I", "You"], correct: "You" },
-            { q: "If we had a magic lamp, what would our first wish be?", options: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: "We both become millionaires" },
-            { q: "If we had a secret hideout, where would it be?", options: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: "Under a palm tree" },
-            { q: "What kind of pet should we have?", options: ["Raccoon", "Little dragon", "Parrot"], correct: "Little dragon" },
-            { q: "What’s our favorite thing to do together?", options: ["Watching movies", "Cooking together", "Traveling"], correct: "Traveling" }
+            { question: "Where will we live?", answers: ["Toronto", "Barcelona", "Africa", "Greenland"], correct: "Toronto" },
+            { question: "What should we name our future pet?", answers: ["Remy", "Luna", "Julian"], correct: "Julian" },
+            { question: "Who will say 'I love you' first today?", answers: ["I", "You"], correct: "I" },
+            { question: "What’s our dream vacation?", answers: ["Malta", "France", "Albania"], correct: "Malta" },
+            { question: "What would be our couple superpower?", answers: ["Solving all arguments", "Being invisible", "Flying"], correct: "Solving all arguments" },
+            { question: "If we had a time machine, where would we go first?", answers: ["Future", "Past"], correct: "Future" },
+            { question: "Who is more likely to get lost in a mall?", answers: ["I", "You"], correct: "You" },
+            { question: "If we had a magic lamp, what would our first wish be?", answers: ["We both become millionaires", "We teleport to each other", "Endless free food"], correct: "We both become millionaires" },
+            { question: "If we had a secret hideout, where would it be?", answers: ["Under a palm tree", "On a tree", "Inside a secret cave"], correct: "Under a palm tree" },
+            { question: "What pet would we get?", answers: ["Raccoon", "Little dragon", "Parrot"], correct: "Little dragon" },
+            { question: "How many mistakes did you make?", answers: ["0", "1", "2+"], correct: "0" }
         ];
         
         let currentQuestionIndex = 0;
         let mistakes = 0;
-
+        
         function showQuestion() {
-            const questionContainer = document.getElementById("question-container");
-            const questionText = document.getElementById("question-text");
-            const optionsContainer = document.getElementById("options");
-            
-            questionText.textContent = questions[currentQuestionIndex].q;
-            optionsContainer.innerHTML = "";
-            
-            questions[currentQuestionIndex].options.forEach(option => {
+            const questionElement = document.getElementById("question");
+            const answersElement = document.getElementById("answers");
+            questionElement.textContent = questions[currentQuestionIndex].question;
+            answersElement.innerHTML = "";
+            questions[currentQuestionIndex].answers.forEach(answer => {
                 const button = document.createElement("button");
-                button.textContent = option;
-                button.onclick = () => checkAnswer(option);
-                optionsContainer.appendChild(button);
+                button.textContent = answer;
+                button.onclick = () => checkAnswer(answer);
+                answersElement.appendChild(button);
             });
         }
-
-        function checkAnswer(selectedOption) {
-            if (selectedOption === questions[currentQuestionIndex].correct) {
+        
+        function checkAnswer(answer) {
+            if (answer === questions[currentQuestionIndex].correct) {
                 currentQuestionIndex++;
-                if (currentQuestionIndex < questions.length) {
+                if (currentQuestionIndex < questions.length - 1) {
                     showQuestion();
                 } else {
-                    showResults();
+                    document.getElementById("quiz-container").classList.add("hidden");
+                    document.getElementById("valentine").classList.remove("hidden");
                 }
             } else {
                 mistakes++;
-                alert("Wrong answer! Try again.");
+                alert("Wrong answer, try again!");
             }
         }
-
-        function showResults() {
-            document.getElementById("quiz-container").classList.add("hidden");
-            document.getElementById("valentine-container").classList.remove("hidden");
-        }
-
-        document.getElementById("yes").addEventListener("click", () => alert("Yay! Happy Valentine's Day!"));
-        document.getElementById("no").addEventListener("mouseover", function() {
-            this.style.left = Math.random() * window.innerWidth - 100 + "px";
-            this.style.top = Math.random() * window.innerHeight - 50 + "px";
-        });
         
         showQuestion();
     </script>
