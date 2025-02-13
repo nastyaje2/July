@@ -5,9 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Викторина</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
-        .question { margin-bottom: 20px; }
-        .hidden { display: none; }
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            color: #333;
+        }
+        .question {
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        button {
+            background: #ff758c;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #ff5e62;
+        }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -29,14 +58,15 @@
         </div>
         <div id="result" class="hidden">
             <h2>Поздравляем! Ты прошёл(а) викторину!</h2>
-            <a href="hidden_page.html">Перейти к сюрпризу</a>
+            <a href="hidden_page.html" style="color: #ff758c; font-size: 18px; text-decoration: none; font-weight: bold;">Перейти к сюрпризу</a>
         </div>
     </div>
 
     <script>
         let currentQuestion = 0;
         const questions = document.querySelectorAll('.question');
-
+        const resultDiv = document.getElementById('result');
+        
         function checkAnswer(button, type) {
             if (type === 'correct') {
                 questions[currentQuestion].classList.add('hidden');
@@ -44,7 +74,8 @@
                 if (currentQuestion < questions.length) {
                     questions[currentQuestion].classList.remove('hidden');
                 } else {
-                    document.getElementById('quiz').innerHTML = document.getElementById('result').outerHTML;
+                    document.getElementById('quiz').innerHTML = resultDiv.outerHTML;
+                    document.getElementById('result').classList.remove('hidden');
                 }
             } else {
                 alert('Неправильный ответ! Попробуй снова.');
@@ -53,3 +84,4 @@
     </script>
 </body>
 </html>
+
