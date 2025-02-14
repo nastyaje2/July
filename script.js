@@ -1,30 +1,83 @@
 document.addEventListener("DOMContentLoaded", function () {
     let mistakes = 0;
+    let currentQuestionIndex = 0;
+
+    let questions = [
+        {
+            question: "Where will we live?",
+            answers: [
+                { text: "Toronto", correct: false },
+                { text: "Barcelona", correct: false },
+                { text: "Africa", correct: false },
+                { text: "Greenland", correct: true }
+            ]
+        },
+        {
+            question: "What should we name our future pet?",
+            answers: [
+                { text: "Remy", correct: false },
+                { text: "Luna", correct: false },
+                { text: "Julian", correct: true }
+            ]
+        },
+        {
+            question: "Who will say 'I love you' first today?",
+            answers: [
+                { text: "I", correct: true },
+                { text: "You", correct: false }
+            ]
+        }
+    ];
+
     let quizContainer = document.getElementById("quiz");
     let resultContainer = document.getElementById("result");
     let gifContainer = document.getElementById("gif-container");
-    let yesButton = document.getElementById("yes-button");
-    let noButton = document.getElementById("no-button");
+    let questionText = document.getElementById("question");
+    let answerButtons = document.getElementById("answers");
 
-    let answers = document.querySelectorAll(".answer");
-    answers.forEach(answer => {
-        answer.addEventListener("click", function () {
-            if (this.dataset.correct === "true") {
-                if (quizContainer) quizContainer.style.display = "none";
-                if (resultContainer) {
-                    resultContainer.innerHTML = `Well done, you are умничка! You made ${mistakes} mistakes.`;
-                    resultContainer.style.display = "block";
-                }
-                setTimeout(() => {
-                    if (resultContainer) resultContainer.style.display = "none";
-                    if (gifContainer) gifContainer.style.display = "block";
-                }, 2000);
-            } else {
-                mistakes++;
-                alert("You are wrong. Try again.");
-            }
+    function showQuestion() {
+        let currentQuestion = questions[currentQuestionIndex];
+        questionText.innerText = currentQuestion.question;
+        answerButtons.innerHTML = "";
+
+        currentQuestion.answers.forEach(answer => {
+            let button = document.createElement("div");
+            button.classList.add("answer");
+            button.innerText = answer.text;
+            button.dataset.correct = answer.correct;
+            button.addEventListener("click", checkAnswer);
+            answerButtons.appendChild(button);
         });
-    });
+    }
+
+    function checkAnswer(event) {
+        let selectedAnswer = event.target;
+        let correct = selectedAnswer.dataset.correct === "true";
+
+        if (correct) {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                quizContainer.style.display = "none";
+                resultContainer.innerHTML = `Well done, you are умничка! You made ${mistakes} mistakes.`;
+                resultContainer.style.display = "block";
+
+                setTimeout(() => {
+                    resultContainer.style.display = "none";
+                    gifContainer.style.display = "block";
+                }, 2000);
+            }
+        } else {
+            mistakes++;
+            alert("You are wrong. Try again.");
+        }
+    }
+
+    showQuestion();
+
+    let noButton = document.getElementById("no-button");
+    let yesButton = document.getElementById("yes-button");
 
     if (noButton) {
         noButton.addEventListener("mouseenter", function () {
