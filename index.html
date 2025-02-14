@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Quiz</title>
+    <title>Quiz for Julian</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>Our Quiz</h1>
-        <div id="quiz"></div>
-        <p id="result"></p>
+    <div id="quiz">
+        <h1>Quiz for Julian</h1>
+        <div class="answer" data-correct="false">Toronto</div>
+        <div class="answer" data-correct="true">Barcelona</div>
+        <div class="answer" data-correct="false">Africa</div>
+        <div class="answer" data-correct="false">Greenland</div>
     </div>
+
+    <div id="result"></div>
+
+    <div id="gif-container">
+        <img src="cat.gif" alt="Cute Cat GIF">
+        <h2>Will you be my Valentine?</h2>
+        <button id="yes-button">Yes</button>
+        <button id="no-button">No</button>
+    </div>
+
     <script src="script.js"></script>
-    <div id="valentine" style="display: none; text-align: center;">
-    <h1>Well done! You're umnichka! You made <span id="mistakeCount"></span> mistakes.</h1>
-    <img src="cat.gif" alt="Cat GIF">
-    <h2>Will you be my Valentine?</h2>
-    <button onclick="alert('Super! Yay! Happy Valentine\'s Day! ❤️')">Yes</button>
-    <button id="no">No</button>
-</div>
 </body>
 </html>
