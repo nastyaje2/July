@@ -4,20 +4,89 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let questions = [
         {
-            question: "Where will we live?",
-            answers: [
-                { text: "Toronto", correct: false },
-                { text: "Barcelona", correct: false },
-                { text: "Africa", correct: false },
-                { text: "Greenland", correct: true }
-            ]
-        },
-        {
-            question: "What should we name our future pet?",
-            answers: [
-                { text: "Remy", correct: false },
-                { text: "Luna", correct: false },
-                { text: "Julian", correct: true }
+             question: "Where will we live?",
+      answers: [
+        { text: "Toronto", correct: false },
+        { text: "Barcelona", correct: true },
+        { text: "Africa", correct: false },
+        { text: "Greenland", correct: false }
+      ]
+    },
+    {
+      question: "What should we name our future pet?",
+      answers: [
+        { text: "Remy", correct: false },
+        { text: "Luna", correct: false },
+        { text: "Julian", correct: true }
+      ]
+    },
+    {
+      question: "Who will say 'I love you' first today?",
+      answers: [
+        { text: "I", correct: true },
+        { text: "You", correct: false }
+      ]
+    },
+    {
+      question: "What’s our dream vacation?",
+      answers: [
+        { text: "Malta", correct: true },
+        { text: "France", correct: false },
+        { text: "Albania", correct: false }
+      ]
+    },
+    {
+      question: "What would be our couple superpower?",
+      answers: [
+        { text: "Solving all arguments", correct: true },
+        { text: "Being invisible", correct: false },
+        { text: "Flying", correct: false }
+      ]
+    },
+    {
+      question: "If we had a time machine, where would we go first?",
+      answers: [
+        { text: "Future", correct: true },
+        { text: "Past", correct: false }
+      ]
+    },
+    {
+      question: "Who is more likely to get lost in a mall?",
+      answers: [
+        { text: "I", correct: false },
+        { text: "You", correct: true }
+      ]
+    },
+    {
+      question: "If we had a magic lamp, what would our first wish be?",
+      answers: [
+        { text: "We both become millionaires", correct: true },
+        { text: "We teleport to each other", correct: false },
+        { text: "Endless free food", correct: false }
+      ]
+    },
+    {
+      question: "If we had a secret hideout, where would it be?",
+      answers: [
+        { text: "Under a palm tree", correct: true },
+        { text: "On a tree", correct: false },
+        { text: "Inside a secret cave", correct: false }
+      ]
+    },
+    {
+      question: "What pet would we have if not a cat or a dog?",
+      answers: [
+        { text: "A tiny dragon", correct: true },
+        { text: "A raccoon", correct: false },
+        { text: "A parrot", correct: false }
+      ]
+    },
+    {
+      question: "Which animated couple are we most like?",
+      answers: [
+        { text: "Shrek and Fiona", correct: false },
+        { text: "Judy and Nick", correct: true },
+        { text: "Carl and Ellie", correct: false }
             ]
         },
         {
@@ -93,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (yesButton) {
         yesButton.addEventListener("click", function () {
-            gifContainer.innerHTML = "<h2>Super, класс, ура! Happy Valentine's Day!</h2>";
+            gifContainer.innerHTML = "<h2>Happy Valentine's Day!</h2>";
         });
     }
 });
