@@ -1,10 +1,8 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let mistakes = 0;
-    let currentQuestionIndex = 0;
-
-    let questions = [
-        {
-             question: "Where will we live?",
+document.addEventListener("DOMContentLoaded", function() {
+  // Массив с 11 вопросами
+  const questions = [
+    {
+      question: "Where will we live?",
       answers: [
         { text: "Toronto", correct: false },
         { text: "Barcelona", correct: true },
@@ -87,82 +85,76 @@ document.addEventListener("DOMContentLoaded", function () {
         { text: "Shrek and Fiona", correct: false },
         { text: "Judy and Nick", correct: true },
         { text: "Carl and Ellie", correct: false }
-            ]
-        },
-        {
-            question: "Who will say 'I love you' first today?",
-            answers: [
-                { text: "I", correct: true },
-                { text: "You", correct: false }
-            ]
-        }
-    ];
-
-    let quizContainer = document.getElementById("quiz");
-    let resultContainer = document.getElementById("result");
-    let gifContainer = document.getElementById("gif-container");
-    let questionText = document.getElementById("question");
-    let answerButtons = document.getElementById("answers");
-
-    function showQuestion() {
-        let currentQuestion = questions[currentQuestionIndex];
-        questionText.innerText = currentQuestion.question;
-        answerButtons.innerHTML = "";
-
-        currentQuestion.answers.forEach(answer => {
-            let button = document.createElement("div");
-            button.classList.add("answer");
-            button.innerText = answer.text;
-            button.dataset.correct = answer.correct;
-            button.addEventListener("click", checkAnswer);
-            answerButtons.appendChild(button);
-        });
+      ]
     }
-
-    function checkAnswer(event) {
-        let selectedAnswer = event.target;
-        let correct = selectedAnswer.dataset.correct === "true";
-
-        if (correct) {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                showQuestion();
-            } else {
-                quizContainer.style.display = "none";
-                resultContainer.innerHTML = `Well done, you are умничка! You made ${mistakes} mistakes.`;
-                resultContainer.style.display = "block";
-
-                setTimeout(() => {
-                    resultContainer.style.display = "none";
-                    gifContainer.style.display = "block";
-                }, 2000);
-            }
+  ];
+  
+  let currentQuestionIndex = 0;
+  let mistakes = 0;
+  
+  const quizContainer = document.getElementById("quiz-container");
+  const questionElement = document.getElementById("question");
+  const answersElement = document.getElementById("answers");
+  const resultContainer = document.getElementById("result-container");
+  const resultMessage = document.getElementById("result-message");
+  const okButton = document.getElementById("ok-button");
+  const finalContainer = document.getElementById("final-container");
+  const yesButton = document.getElementById("yes-button");
+  const noButton = document.getElementById("no-button");
+  
+  // Функция для показа вопроса
+  function showQuestion() {
+    answersElement.innerHTML = "";
+    const currentQuestion = questions[currentQuestionIndex];
+    questionElement.innerText = currentQuestion.question;
+    
+    currentQuestion.answers.forEach(answer => {
+      const button = document.createElement("button");
+      button.innerText = answer.text;
+      button.classList.add("answer-btn");
+      button.addEventListener("click", function() {
+        if (answer.correct) {
+          // Переходим к следующему вопросу
+          currentQuestionIndex++;
+          if (currentQuestionIndex < questions.length) {
+            showQuestion();
+          } else {
+            // Все вопросы отвечены — показываем сообщение с результатом
+            quizContainer.style.display = "none";
+            resultMessage.innerText = `Well done, you are умничка! You made ${mistakes} mistakes.`;
+            resultContainer.style.display = "block";
+          }
         } else {
-            mistakes++;
-            alert("You are wrong. Try again.");
+          // Неверный ответ
+          mistakes++;
+          alert("Wrong answer, try again!");
         }
-    }
-
-    showQuestion();
-
-    let noButton = document.getElementById("no-button");
-    let yesButton = document.getElementById("yes-button");
-
-    if (noButton) {
-        noButton.addEventListener("mouseenter", function () {
-            let maxX = window.innerWidth - this.clientWidth;
-            let maxY = window.innerHeight - this.clientHeight;
-            let newX = Math.random() * maxX;
-            let newY = Math.random() * maxY;
-            this.style.position = "absolute";
-            this.style.left = `${newX}px`;
-            this.style.top = `${newY}px`;
-        });
-    }
-
-    if (yesButton) {
-        yesButton.addEventListener("click", function () {
-            gifContainer.innerHTML = "<h2>Happy Valentine's Day!</h2>";
-        });
-    }
+      });
+      answersElement.appendChild(button);
+    });
+  }
+  
+  showQuestion();
+  
+  // При клике по OK — переходим к финальному экрану
+  okButton.addEventListener("click", function() {
+    resultContainer.style.display = "none";
+    finalContainer.style.display = "flex";
+  });
+  
+  // Обработка кнопки Yes
+  yesButton.addEventListener("click", function() {
+    alert("Super, класс, ура! Happy Valentine's Day!");
+  });
+  
+  // Кнопка No уходит при наведении
+  noButton.addEventListener("mouseenter", function() {
+    const maxX = window.innerWidth - noButton.clientWidth;
+    const maxY = window.innerHeight - noButton.clientHeight;
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+    noButton.style.position = "absolute";
+    noButton.style.left = randomX + "px";
+    noButton.style.top = randomY + "px";
+  });
 });
