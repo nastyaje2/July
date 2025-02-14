@@ -61,10 +61,9 @@ let correctAnswers = 0;
 
 const quizDiv = document.getElementById("quiz");
 const gifDiv = document.getElementById("gif-screen");
-const valentineDiv = document.getElementById("valentine");
 const gifImage = document.createElement("img");
 
-gifImage.src = "cat.gif"; // Убедись, что название точное!
+gifImage.src = "cat.gif"; // Гифка должна быть в той же папке
 gifImage.style.width = "300px"; 
 gifImage.style.height = "auto";
 gifImage.style.display = "none";
@@ -109,16 +108,23 @@ function showGif() {
     quizDiv.style.display = "none";
     gifImage.style.display = "block"; // Показываем гифку
 
-    setTimeout(() => {
-        gifImage.style.display = "none";
-        valentineDiv.style.display = "block";
-    }, 2000);
-}
+    // Показываем кнопки "Yes" и "No"
+    const valentineDiv = document.createElement("div");
+    valentineDiv.id = "valentine";
+    valentineDiv.innerHTML = `
+        <p style="font-size: 24px; color: white;">Will you be my Valentine?</p>
+        <button id="yes" style="font-size: 18px;">Yes</button>
+        <button id="no" style="font-size: 18px; position: absolute;">No</button>
+    `;
+    document.body.appendChild(valentineDiv);
 
-// Moving "No" button
-const noButton = document.getElementById("no");
-noButton.onmouseover = function() {
-    this.style.position = "absolute";
-    this.style.left = Math.random() * (window.innerWidth - 100) + "px";
-    this.style.top = Math.random() * (window.innerHeight - 50) + "px";
-};
+    document.getElementById("yes").onclick = () => {
+        alert("Super, класс, ура! Happy Valentine's Day!");
+    };
+
+    const noButton = document.getElementById("no");
+    noButton.onmouseover = function() {
+        this.style.left = Math.random() * (window.innerWidth - 100) + "px";
+        this.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    };
+}
