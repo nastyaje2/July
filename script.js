@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
       ]
     },
     {
-      question: "What’s our dream vacation?",
+      question: "What's our dream vacation?",
       answers: [
         { text: "Malta", correct: true },
         { text: "France", correct: false },
@@ -102,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const yesButton = document.getElementById("yes-button");
   const noButton = document.getElementById("no-button");
   
-  // Функция для показа вопроса
   function showQuestion() {
     answersElement.innerHTML = "";
     const currentQuestion = questions[currentQuestionIndex];
@@ -114,18 +113,16 @@ document.addEventListener("DOMContentLoaded", function() {
       button.classList.add("answer-btn");
       button.addEventListener("click", function() {
         if (answer.correct) {
-          // Переходим к следующему вопросу
           currentQuestionIndex++;
           if (currentQuestionIndex < questions.length) {
             showQuestion();
           } else {
-            // Все вопросы отвечены — показываем сообщение с результатом
+            // Все вопросы отвечены
             quizContainer.style.display = "none";
             resultMessage.innerText = `Well done, you are умничка! You made ${mistakes} mistakes.`;
             resultContainer.style.display = "block";
           }
         } else {
-          // Неверный ответ
           mistakes++;
           alert("Wrong answer, try again!");
         }
@@ -136,18 +133,15 @@ document.addEventListener("DOMContentLoaded", function() {
   
   showQuestion();
   
-  // При клике по OK — переходим к финальному экрану
   okButton.addEventListener("click", function() {
     resultContainer.style.display = "none";
     finalContainer.style.display = "flex";
   });
   
-  // Обработка кнопки Yes
   yesButton.addEventListener("click", function() {
     alert("Super, класс, ура! Happy Valentine's Day!");
   });
   
-  // Кнопка No уходит при наведении
   noButton.addEventListener("mouseenter", function() {
     const maxX = window.innerWidth - noButton.clientWidth;
     const maxY = window.innerHeight - noButton.clientHeight;
