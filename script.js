@@ -119,12 +119,12 @@ document.addEventListener("DOMContentLoaded", function() {
           } else {
             // Все вопросы отвечены
             quizContainer.style.display = "none";
-            resultMessage.innerText = `Well done, you are умничка! You made ${mistakes} mistakes.`;
+            resultMessage.innerText = `Well done, you are my umnichka! You made ${mistakes} mistakes.`;
             resultContainer.style.display = "block";
           }
         } else {
           mistakes++;
-          alert("Wrong answer, try again!");
+          alert("Wrong answer, try again, dummy:(!");
         }
       });
       answersElement.appendChild(button);
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
   
   yesButton.addEventListener("click", function() {
-    alert("Super, класс, ура! Happy Valentine's Day!");
+    alert("Happy Valentine's Day!");
   });
   
   noButton.addEventListener("mouseenter", function() {
